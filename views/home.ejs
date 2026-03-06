@@ -1,17 +1,53 @@
 <% layout("/layouts/boilerplate") -%>
-<div>
-    <p>RockPaperScissors</p>
-    <a href="/games/rockpaperscissors">Play</a>
-</div>
-<div>
-    <p>Simon Game</p>
-    <a href="/games/simongame">Play</a>
-</div>
-<div>
-    <p>Guessing Game</p>
-    <a href="/games/guessinggame">Play</a>
-</div>
-<div>
-    <p>TicTacToe</p>
-    <a href="/games/tictactoe">Play</a>
+
+<div class="home-container">
+    <div class="games-section">
+        <h2 class="section-title">All Games</h2>
+        <div class="games-grid">
+            <!-- Rock Paper Scissors Card -->
+            <div class="game-card">
+                <div class="card-content">
+                    <h3>Rock Paper Scissors</h3>
+                    <p>The classic hand game. Test your luck against the computer!</p>
+                    <a href="/games/rockpaperscissors" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Simon Game Card -->
+            <div class="game-card">
+                <div class="card-content">
+                    <h3>Simon Game</h3>
+                    <p>Test your memory! Repeat the sequence of lights and sounds.</p>
+                    <a href="/games/simongame" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Guessing Game Card -->
+            <div class="game-card">
+                <div class="card-content">
+                    <h3>Guessing Game</h3>
+                    <p>Can you guess the number? Challenge your intuition.</p>
+                    <a href="/games/guessinggame" class="play-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Tic Tac Toe Card -->
+            <div class="game-card">
+                <div class="card-content">
+                    <h3>Tic Tac Toe</h3>
+                    <p>Classic strategy game. X's and O's, three in a row wins!</p>
+                    <a href="/games/tictactoe" class="play-btn">Play Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <aside class="leaderboard-sidebar">
+        <div class="leaderboard-container">
+            <h3>Leaderboard</h3>
+            <div class="leaderboard-placeholder">
+                <p>Coming Soon...</p>
+            </div>
+        </div>
+    </aside>
 </div>

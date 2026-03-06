@@ -1,6 +1,7 @@
 let randomNumber;
 let attempts = 0;
 let maxRange = 100;
+let targetAttempts = 0;
 
 
 const setupArea = document.getElementById('setup-area');
@@ -32,6 +33,8 @@ function startGame() {
     }
     
     maxRange = rangeVal;
+    targetAttempts = Math.ceil(Math.log2(maxRange));
+
     setupArea.classList.add('hidden');
     playArea.classList.remove('hidden');
     rangeText.textContent = `Pick a number between 1 and ${maxRange}`;
@@ -51,7 +54,7 @@ function resetGameLogic() {
     submitBtn.disabled = false;
     restartBtn.classList.add('hidden');
     submitBtn.classList.remove('hidden');
-    messageEl.textContent = 'Start guessing!';
+    messageEl.textContent = `Start guessing! (Target: ${targetAttempts} attempts)`;
     messageEl.className = '';
     attemptsEl.textContent = 'Attempts: 0';
     guessInput.focus();
@@ -70,7 +73,9 @@ function checkGuess() {
     attemptsEl.textContent = `Attempts: ${attempts}`;
 
     if (userGuess === randomNumber) {
-        endGame(true);
+        // Score = Target Attempts - Actual Attempts + 1
+        const score = targetAttempts - attempts + 1;
+        endGame(true, score);
     } else if (userGuess < randomNumber) {
         setMessage('Too low! Try a higher number.', 'hint');
         shakeInput();
@@ -90,9 +95,10 @@ function setMessage(msg, type) {
 }
 
 
-function endGame(win) {
+function endGame(win, score) {
     if (win) {
-        setMessage(`🎉 Correct! The number was ${randomNumber}.`, 'success');
+        const scoreText = score > 0 ? `+${score}` : `${score}`;
+        setMessage(`🎉 Correct! The number was ${randomNumber}. Score: ${scoreText} (Efficiency: ${attempts}/${targetAttempts})`, 'success');
     }
     
     guessInput.disabled = true;

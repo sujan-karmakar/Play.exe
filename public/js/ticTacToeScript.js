@@ -83,29 +83,60 @@ const endGame = (result) => {
     disableBoxes(); // Ensure no more clicks
 };
 
+const findWinningMove = (player) => {
+    // Check all winning patterns to see if 'player' can win in one move
+    for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        const boxA = boxes[a].innerText;
+        const boxB = boxes[b].innerText;
+        const boxC = boxes[c].innerText;
+
+        // Pattern: [X, X, empty] or [O, O, empty] etc.
+        if (boxA === player && boxB === player && boxC === "") return c;
+        if (boxA === player && boxC === player && boxB === "") return b;
+        if (boxB === player && boxC === player && boxA === "") return a;
+    }
+    return null;
+};
+
 const computerMove = () => {
     if (!isGameActive) return;
 
-    // 1. Get empty indices
-    const emptyIndices = boxes
-        .map((box, index) => box.innerText === "" ? index : null)
-        .filter(val => val !== null);
+    setTimeout(() => {
+        if (!isGameActive) return;
 
-    if (emptyIndices.length > 0) {
-        // 2. Random Choice
-        const randomIndex = Math.floor(Math.random() * emptyIndices.length);
-        const choice = emptyIndices[randomIndex];
+        let choice = null;
 
-        // 3. Apply Move after delay
-        setTimeout(() => {
-            if (!isGameActive) return;
+        // 1. Check if Computer can win NOW (90% chance to execute)
+        if (Math.random() < 0.9) {
+            choice = findWinningMove("O");
+        }
 
+        // 2. If not, check if User is about to win and BLOCK them (70% chance to execute)
+        if (choice === null && Math.random() < 0.7) {
+            choice = findWinningMove("X");
+        }
+
+        // 3. Take Center if available (80% chance)
+        if (choice === null && boxes[4].innerText === "" && Math.random() < 0.8) {
+            choice = 4;
+        }
+
+        // 4. If still no choice, pick RANDOM available box
+        if (choice === null) {
+            const emptyIndices = boxes.map((box, idx) => box.innerText === "" ? idx : null).filter(val => val !== null);
+            if (emptyIndices.length > 0) {
+                choice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+            }
+        }
+
+        // Apply Move
+        if (choice !== null) {
             const box = boxes[choice];
             box.innerText = "O";
             box.classList.add("player-o");
             box.disabled = true;
 
-            // 4. Check Result
             if (checkWinner("O")) {
                 endGame("O");
             } else if (checkDraw()) {
@@ -113,8 +144,8 @@ const computerMove = () => {
             } else {
                 isUserTurn = true; // Back to user
             }
-        }, 600); // 600ms thinks time
-    }
+        }
+    }, 600); // 600ms thinks time
 };
 
 const handleUserClick = (box) => {

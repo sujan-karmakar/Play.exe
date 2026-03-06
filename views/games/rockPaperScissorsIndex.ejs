@@ -1,30 +1,42 @@
 <% layout("/layouts/boilerplate") -%>
 <% block('head').append('<link rel="stylesheet" href="/css/rockPaperScissorsStyle.css">') %>
-    <h1>Rock Paper Scissors</h1>
-    <div class="choices">
-        <div class="choice" id="rock">
-            <img src="/assets/rock.png">
-        </div>
-        <div class="choice" id="paper">
-            <img src="/assets/paper.png">
-        </div>
-        <div class="choice" id="scissors">
-            <img src="/assets/scissors.png">
-        </div>
-    </div>
-
-    <div class="scoreboard">
-        <div class="score">
+    
+    <div class="game-container">
+        <h1>Rock Paper Scissors</h1>
+        
+        <div class="scoreboard">
+            <p>Score</p>
             <p id="userscore">0</p>
-            <p>You</p>
         </div>
-        <div class="score">
-            <p id="compscore">0</p>
-            <p>Comp</p>
+
+        <div class="choices">
+            <div class="choice" id="rock">
+                <img src="/assets/rock.png" alt="Rock">
+            </div>
+            <div class="choice" id="paper">
+                <img src="/assets/paper.png" alt="Paper">
+            </div>
+            <div class="choice" id="scissors">
+                <img src="/assets/scissors.png" alt="Scissors">
+            </div>
+        </div>
+
+        <div class="msgcontainer">
+            <p id="msg">Choose your move!</p>
         </div>
     </div>
 
-    <div class="msgcontainer">
-        <p id="msg">Play Your Move</p>
+    <!-- Result Modal -->
+    <div class="result-modal hidden" id="resultModal">
+        <div class="modal-content">
+            <h2 id="resultTitle">You Won!</h2>
+            <div class="score-change" id="scoreChange">+1</div>
+            <p id="resultMsg">Rock beats Scissors</p>
+            <div class="modal-buttons">
+                <button id="playAgainBtn" class="game-btn">Play Again</button>
+                <a href="/" class="game-btn secondary-btn">Home</a>
+            </div>
+        </div>
     </div>
+
     <script src="/js/rockPaperScissorsScript.js"></script>
