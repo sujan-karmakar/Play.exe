@@ -8,6 +8,11 @@ module.exports.updateScore = async (req, res) => {
 
     const { game, score } = req.body;
     
+    // Validate score is a number
+    if (isNaN(parseInt(score))) {
+        return res.status(400).json({ error: "Invalid score value" });
+    }
+    
     // Validate game name
     const allowedGames = ["ticTacToe", "simonGame", "guessingGame", "rockPaperScissors"];
     if (!allowedGames.includes(game)) {
@@ -16,13 +21,39 @@ module.exports.updateScore = async (req, res) => {
 
     try {
         const user = await User.findById(req.user._id);
+
+
+
         
+        const now = new Date();
+        const lastUpdate = user.updatedAt ? new Date(user.updatedAt) : new Date(0);
+        if ((now - lastUpdate) < 1000) { 
+            return res.status(429).json({ error: "Please wait before updating score again." });
+        }
+
+        const currentScore = user.points[game] || 0;
+        const newScore = parseInt(score);
+
+        if (game === "ticTacToe" || game === "rockPaperScissors") {
+            if (newScore > currentScore + 2) {
+                 return res.status(400).json({ error: "Suspicious score increase detected." });
+            }
+        } else if (game === "simonGame") {
+            if (newScore > 60) {
+                 return res.status(400).json({ error: "Score exceeds maximum possible limit." });
+            }
+        } else if (game === "guessingGame") {
+             if (newScore > 25) {
+                 return res.status(400).json({ error: "Score exceeds maximum possible limit." });
+             }
+        }
+
         if (typeof user.points[game] === 'undefined') {
             user.points[game] = 0;
         }
 
-        // Universal Highest Score Logic:
-        // Update only if the new session score is higher than the stored best score
+        
+        
         if (parseInt(score) > user.points[game]) {
             user.points[game] = parseInt(score);
         }
