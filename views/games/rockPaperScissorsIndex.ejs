@@ -5,8 +5,14 @@
         <h1>Rock Paper Scissors</h1>
         
         <div class="scoreboard">
-            <p>Score</p>
+            <% if(currentUser) { %>
+                <p style="margin-bottom: 0.5rem; color: var(--primary-color);">Player: <%= currentUser.username %></p>
+            <% } %>
+            <p>Session Score</p>
             <p id="userscore">0</p>
+            <% if(currentUser && currentUser.points) { %>
+                <p style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;">(Best: <%= currentUser.points.rockPaperScissors || 0 %>)</p>
+            <% } %>
         </div>
 
         <div class="choices">
@@ -33,8 +39,8 @@
             <div class="score-change" id="scoreChange">+1</div>
             <p id="resultMsg">Rock beats Scissors</p>
             <div class="modal-buttons">
-                <button id="playAgainBtn" class="game-btn">Play Again</button>
-                <a href="/" class="game-btn secondary-btn">Home</a>
+                <button id="playAgainBtn" class="game-btn">Continue</button>
+                <a href="/" class="game-btn secondary-btn" id="homeBtnModal">Home</a>
             </div>
         </div>
     </div>

@@ -95,8 +95,28 @@ function setMessage(msg, type) {
 }
 
 
+async function updateScoreInDB(change) {
+    try {
+        const response = await fetch('/games/updateUserScore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ game: 'guessingGame', score: change })
+        });
+        const data = await response.json();
+        const scoreEl = document.getElementById("current-score");
+        if (data.totalScore !== undefined && scoreEl) {
+             scoreEl.innerText = data.totalScore;
+        }
+    } catch (e) {
+        console.error("Failed to update score", e);
+    }
+}
+
 function endGame(win, score) {
     if (win) {
+        // Send score update
+        updateScoreInDB(score);
+
         const scoreText = score > 0 ? `+${score}` : `${score}`;
         setMessage(`🎉 Correct! The number was ${randomNumber}. Score: ${scoreText} (Efficiency: ${attempts}/${targetAttempts})`, 'success');
     }

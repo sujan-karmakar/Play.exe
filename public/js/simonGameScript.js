@@ -6,7 +6,7 @@ let btns = ["item1", "item2", "item3", "item4"];
 let started = false;
 let level = 0;
 
-let h3 = document.querySelector("h3");
+let h3 = document.querySelector("#level-title");
 
 document.addEventListener("keypress", function () {
     if (started == false) {
@@ -56,13 +56,31 @@ function levelUp() {
     }, 1000);
 }
 
+async function updateScoreInDB(score) {
+    try {
+        const response = await fetch('/games/updateUserScore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ game: 'simonGame', score: score })
+        });
+        const data = await response.json();
+        const scoreEl = document.getElementById("simon-score");
+        if (data.totalScore !== undefined && scoreEl) {
+             scoreEl.innerText = data.totalScore;
+        }
+    } catch (e) { console.error(e); }
+}
+
 function checkAns(idx) {
     if (userSeq[idx] === gameSeq[idx]) {
         if (userSeq.length == gameSeq.length) {
             setTimeout(levelUp, 1000);
         }
     } else {
-        h3.innerHTML = `Game Over! Your score was <b>${level - 1}</b> <br> Press any key to start.`;
+        let score = level - 1;
+        if(score > 0) updateScoreInDB(score); // Send score update
+
+        h3.innerHTML = `Game Over! Your score was <b>${score}</b> <br> Press any key to start.`;
         document.querySelector("body").style.backgroundColor = "red";
         setTimeout(function () {
             document.querySelector("body").style.backgroundColor = ""; // Reset to CSS default

@@ -66,8 +66,56 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get("/", (req, res) => {
-    res.render('home.ejs');
+app.get("/", async (req, res) => {
+    try {
+        const users = await User.find({});
+        
+        // Calculate total scores and format for main leaderboard
+        const leaderboardData = users.map(user => {
+            const p = user.points || {};
+            const totalScore = (p.guessingGame || 0) + (p.ticTacToe || 0) + (p.simonGame || 0) + (p.rockPaperScissors || 0);
+            return {
+                username: user.username,
+                totalScore: totalScore,
+                _id: user._id
+            };
+        });
+
+        // Sort by total score descending
+        leaderboardData.sort((a, b) => b.totalScore - a.totalScore);
+
+        // Find current user's rank
+        let userRank = null;
+        if (req.user) {
+            const rankIndex = leaderboardData.findIndex(u => u._id.equals(req.user._id));
+            if (rankIndex !== -1) {
+                userRank = {
+                    rank: rankIndex + 1,
+                    ...leaderboardData[rankIndex]
+                };
+            }
+        }
+
+        // Prepare top 3 for each game
+        const getTop3 = (gameName) => {
+            return users
+                .map(u => ({ username: u.username, score: (u.points && u.points[gameName]) || 0 }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3);
+        };
+
+        const gameLeaderboards = {
+            rockPaperScissors: getTop3('rockPaperScissors'),
+            simonGame: getTop3('simonGame'),
+            guessingGame: getTop3('guessingGame'),
+            ticTacToe: getTop3('ticTacToe')
+        };
+
+        res.render('home.ejs', { leaderboardData, userRank, gameLeaderboards });
+    } catch (err) {
+        console.error(err);
+        res.render('home.ejs', { leaderboardData: [], userRank: null, gameLeaderboards: {} });
+    }
 });
 
 //Routes

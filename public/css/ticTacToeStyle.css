@@ -201,7 +201,7 @@ h1 {
 .box:focus { outline: none; }
 .box:active { background-color: #21262d; }
 
-#reset, #new-btn {
+#reset {
     padding: 1rem 2rem;
     font-size: 1.2rem;
     background-color: var(--primary-color);
@@ -213,6 +213,6 @@ h1 {
     transition: background 0.2s;
 }
 
-#reset:hover, #new-btn:hover {
+#reset:hover {
     filter: brightness(1.1);
 }

@@ -5,9 +5,24 @@ const msgContainer = document.querySelector(".msg-container");
 const msg = document.querySelector("#msg");
 const userScoreEl = document.querySelector("#user-score");
 
-let userScore = 0;
+let sessionScore = 0;
+userScoreEl.innerText = sessionScore;
+
 let isGameActive = true;
 let isUserTurn = true; // User (X) starts
+
+async function updateScoreInDB(currentSessionScore) {
+    try {
+        const response = await fetch('/games/updateUserScore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ game: 'ticTacToe', score: currentSessionScore })
+        });
+        // We don't overwrite sessionScore with totalScore anymore
+    } catch (e) {
+         console.error(e); 
+    }
+}
 
 const winPatterns = [
     [0, 1, 2], [0, 3, 6], [0, 4, 8],
@@ -26,9 +41,6 @@ const initGame = () => {
 
 // Reset Board
 const resetGame = () => {
-    // Reset score strictly if requested? Usually reset game just clears board.
-    // User probably wants to keep score if "New Game" is clicked?
-    // Let's keep score.
     initGame();
 };
 
@@ -45,7 +57,6 @@ const enableBoxes = () => {
 };
 
 const checkWinner = (player) => {
-    // Returns true if 'player' ('X' or 'O') has won
     return winPatterns.some(pattern => {
         return pattern.every(index => {
             return boxes[index].innerText === player;
@@ -66,11 +77,12 @@ const endGame = (result) => {
     
     if (result === "X") {
         // User Wins
-        const emptyCount = countEmptyCells();
-        const points = 1 + emptyCount;
-        userScore += points;
-        userScoreEl.innerText = userScore;
-        msg.innerText = `You Won! (+${points})`;
+        // Score logic: Simple +1 per win in this session
+        sessionScore++;
+        userScoreEl.innerText = sessionScore;
+        updateScoreInDB(sessionScore);
+        
+        msg.innerText = `You Won!`;
     } else if (result === "O") {
         // Computer Wins
         msg.innerText = "Game Over!";
@@ -81,6 +93,20 @@ const endGame = (result) => {
     
     msgContainer.classList.remove("hide");
     disableBoxes(); // Ensure no more clicks
+    
+    // Add Home Button if missing (for user navigation)
+    const popup = document.querySelector(".winner-popup");
+    if (popup && !document.querySelector("#homeBtnTTT")) {
+        const homeBtn = document.createElement("button");
+        homeBtn.id = "homeBtnTTT";
+        homeBtn.innerText = "Home";
+        homeBtn.className = "game-btn";
+        homeBtn.style.marginTop = "10px";
+        homeBtn.style.backgroundColor = "var(--text-color)"; // darker
+        homeBtn.style.color = "var(--surface-color)";
+        homeBtn.onclick = () => window.location.href = "/";
+        popup.appendChild(homeBtn);
+    }
 };
 
 const findWinningMove = (player) => {

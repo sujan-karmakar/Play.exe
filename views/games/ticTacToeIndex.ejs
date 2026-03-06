@@ -4,14 +4,20 @@
     <div class="msg-container hide">
         <div class="winner-popup">
             <p id="msg">Winner</p>
-            <button id="new-btn" class="game-btn">New Game</button>
+            <button id="new-btn" class="game-btn">Continue</button>
         </div>
     </div>
 
     <div class="game-container">
         <h1>Tic Tac Toe</h1>
+        <% if(currentUser) { %>
+            <p style="margin-bottom: 0.5rem; color: var(--primary-color);">Player: <%= currentUser.username %></p>
+        <% } %>
         <div id="score-board">
-            User Score: <span id="user-score">0</span>
+            Session Score: <span id="user-score">0</span>
+            <% if(currentUser && currentUser.points) { %>
+                <br><span style="font-size: 0.8em; opacity: 0.8;">(Best: <%= currentUser.points.ticTacToe || 0 %>)</span>
+            <% } %>
         </div>
         <div class="game-board">
             <button class="box"></button>

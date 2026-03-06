@@ -2,7 +2,12 @@
 <% block('head').append('<link rel="stylesheet" href="/css/simonGameStyle.css">') %>
     <h1>Simon's Game</h1>
 
-    <h3>Press any key to start the game</h3>
+    <% if(currentUser) { %>
+        <h3 style="color: var(--primary-color);">Player: <%= currentUser.username %></h3>
+        <h3>Highest Score: <span id="simon-score"><%= (currentUser.points && currentUser.points.simonGame) || 0 %></span></h3>
+    <% } %>
+
+    <h3 id="level-title">Press any key to start the game</h3>
 
         <div id="container" class="glass">
             <div id="line1">
