@@ -1,26 +1,27 @@
 <% layout("/layouts/boilerplate.ejs") -%>
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">SignUp on WanderLust</h1>
-    <div class="col-6 offset-3">
-        <form method="POST" action="/signup" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter username" class="form-control" required>
+<div class="auth-container">
+    <h2 class="auth-title">Sign Up</h2>
+    <form method="POST" action="/signup" class="auth-form needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" class="form-control" required>
+            <div class="valid-feedback">Looks good</div>
+        </div>
 
-                <div class="valid-feedback">Looks good</div>
-            </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" class="form-control" required>
+        </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter email" class="form-control" required>
-            </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" class="form-control" required>
+        </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter password" class="form-control" required>
-            </div>
+        <button class="auth-btn">Sign Up</button>
+    </form>
 
-            <button class="btn btn-success">SignUp</button>
-        </form>
+    <div style="text-align: center; margin-top: 1rem; color: var(--text-color);">
+        <small>Already have an account? <a href="/login" style="color: var(--primary-color);">Login</a></small>
     </div>
 </div>

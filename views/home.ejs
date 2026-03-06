@@ -89,6 +89,11 @@
     <aside class="leaderboard-sidebar">
         <div class="leaderboard-container">
             <h3>Global Leaderboard</h3>
+            <% if(!currentUser) { %>
+                <p style="font-size: 0.85rem; color: var(--text-color); margin-bottom: 1rem; opacity: 0.8; text-align: center;">
+                    <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Log in</a> to save scores & join the leaderboard!
+                </p>
+            <% } %>
             <div class="leaderboard-list">
                 <% if(leaderboardData && leaderboardData.length > 0) { %>
                     <ul class="leaderboard-items">

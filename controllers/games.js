@@ -22,9 +22,6 @@ module.exports.updateScore = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
 
-
-
-        
         const now = new Date();
         const lastUpdate = user.updatedAt ? new Date(user.updatedAt) : new Date(0);
         if ((now - lastUpdate) < 1000) { 
