@@ -1,0 +1,30 @@
+<% layout("/layouts/boilerplate") -%>
+<% block('head').append('<link rel="stylesheet" href="/css/ticTacToeStyle.css">') %>
+    
+    <div class="msg-container hide">
+        <div class="winner-popup">
+            <p id="msg">Winner</p>
+            <button id="new-btn" class="game-btn">New Game</button>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <h1>Tic Tac Toe</h1>
+        <div id="score-board">
+            User Score: <span id="user-score">0</span>
+        </div>
+        <div class="game-board">
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+        </div>
+        <button id="reset" class="game-btn reset-btn">Reset Game</button>
+    </div>
+
+    <script src="/js/ticTacToeScript.js"></script>

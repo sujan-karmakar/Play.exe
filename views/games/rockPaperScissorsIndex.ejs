@@ -1,0 +1,30 @@
+<% layout("/layouts/boilerplate") -%>
+<% block('head').append('<link rel="stylesheet" href="/css/rockPaperScissorsStyle.css">') %>
+    <h1>Rock Paper Scissors</h1>
+    <div class="choices">
+        <div class="choice" id="rock">
+            <img src="/assets/rock.png">
+        </div>
+        <div class="choice" id="paper">
+            <img src="/assets/paper.png">
+        </div>
+        <div class="choice" id="scissors">
+            <img src="/assets/scissors.png">
+        </div>
+    </div>
+
+    <div class="scoreboard">
+        <div class="score">
+            <p id="userscore">0</p>
+            <p>You</p>
+        </div>
+        <div class="score">
+            <p id="compscore">0</p>
+            <p>Comp</p>
+        </div>
+    </div>
+
+    <div class="msgcontainer">
+        <p id="msg">Play Your Move</p>
+    </div>
+    <script src="/js/rockPaperScissorsScript.js"></script>

@@ -1,0 +1,130 @@
+:root {
+    --bg-color: #0d1117;
+    --surface-color: #161b22;
+    --primary-color: #58a6ff;
+    --secondary-color: #238636;
+    --text-color: #c9d1d9;
+    --border-color: #30363d;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --font-main: 'Poppins', sans-serif;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+button {
+    cursor: pointer;
+    font-family: var(--font-main);
+}
+
+/* Common Game Container */
+.game-container {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    margin: 2rem auto;
+    max-width: 800px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Footer overrides */
+footer {
+    margin-top: auto;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.f-info-socials a {
+    color: var(--text-color);
+    margin: 0 0.5rem;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.f-info-socials a:hover {
+    color: var(--primary-color);
+}
+
+
+/* Navbar Styles */
+.custom-navbar {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+}
+
+.custom-navbar .navbar-brand {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.custom-navbar .nav-link {
+    color: var(--text-color) !important;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.custom-navbar .nav-link:hover, .custom-navbar .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+.custom-navbar .navbar-toggler-icon {
+    background-image: url('data:image/svg+xml;charset=utf8,%3Csvg viewBox=\'0 0 30 30\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath stroke=\'rgba(88, 166, 255, 1)\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-miterlimit=\'10\' d=\'M4 7h22M4 15h22M4 23h22\'/%3E%3C/svg%3E');
+}
+
+.custom-navbar .navbar-toggler {
+    border-color: var(--primary-color);
+}
+
+.custom-navbar .form-control {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.custom-navbar .form-control:focus {
+    background-color: var(--bg-color);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: none;
+}
+
+.custom-navbar .btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.custom-navbar .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}

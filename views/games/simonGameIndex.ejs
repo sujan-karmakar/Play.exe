@@ -1,0 +1,18 @@
+<% layout("/layouts/boilerplate") -%>
+<% block('head').append('<link rel="stylesheet" href="/css/simonGameStyle.css">') %>
+    <h1>Simon's Game</h1>
+
+    <h3>Press any key to start the game</h3>
+
+        <div id="container" class="glass">
+            <div id="line1">
+                <div class="items glass" id="item1">1</div>
+                <div class="items glass" id="item2">2</div>
+            </div>
+            <div id="line2">
+                <div class="items glass" id="item3">3</div>
+                <div class="items glass" id="item4">4</div>
+            </div>
+        </div>
+
+        <script src="/js/simonGameScript.js"></script>

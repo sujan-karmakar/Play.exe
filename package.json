@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "ejs": "^5.0.1",
+    "ejs-mate": "^4.0.0",
     "express": "^5.2.1",
     "method-override": "^3.0.0"
   }
