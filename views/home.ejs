@@ -100,7 +100,7 @@
                         <% leaderboardData.forEach((player, index) => { %>
                             <li class="leaderboard-item <%= (currentUser && player._id.toString() === currentUser._id.toString()) ? 'highlight-user' : '' %>">
                                 <span class="rank">#<%= index + 1 %></span>
-                                <span class="username"><%= player.username %></span>
+                                <a href="/users/<%= player._id %>" class="username" style="text-decoration: none; color: inherit;"><%= player.username %></a>
                                 <span class="score"><%= player.totalScore %></span>
                             </li>
                         <% }) %>

@@ -1,0 +1,99 @@
+<% layout("/layouts/boilerplate.ejs") -%>
+<div class="container mt-5">
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="auth-container p-4 text-center">
+                <div class="profile-avatar mb-3">
+                    <i class="fa-solid fa-user-circle fa-5x" style="color: var(--primary-color);"></i>
+                </div>
+                <h3 class="mb-1"><%= user.username %></h3>
+                
+                <hr class="my-4" style="border-color: var(--border-color);">
+                
+                <div class="global-rank mb-3">
+                    <h5 class="text-uppercase" style="color: var(--secondary-color); font-size: 0.9rem;">Global Rank</h5>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <i class="fa-solid fa-trophy" style="color: gold;"></i>
+                        <span class="fs-4 fw-bold">#<%= globalRank %></span>
+                    </div>
+                </div>
+
+                <div class="total-score">
+                    <h5 class="text-uppercase" style="color: var(--text-color); font-size: 0.9rem;">Total Score</h5>
+                    <span class="fs-2 fw-bold" style="color: var(--primary-color);"><%= totalScore %></span>
+                </div>
+
+                <% if(currentUser && currentUser._id.equals(user._id)) { %>
+                    <hr class="my-4" style="border-color: var(--border-color);">
+                    <div class="d-grid gap-2">
+                        <a href="/users/<%= user._id %>/edit" class="btn btn-outline-primary rounded-pill">
+                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit Profile
+                        </a>
+                        <form action="/users/<%= user._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+                            <button class="btn btn-outline-danger rounded-pill w-100">
+                                <i class="fa-solid fa-trash me-2"></i>Delete Account
+                            </button>
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Game Stats Section -->
+        <div class="col-md-8">
+            <h2 class="mb-4" style="color: var(--text-color);">Game Performance</h2>
+            <div class="row g-4">
+                
+                <!-- Game 1: Tic Tac Toe -->
+                <div class="col-md-6">
+                    <div class="game-stat-card p-3 rounded-3" style="background: var(--surface-color); border: 1px solid var(--border-color);">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="mb-0">Tic Tac Toe</h5>
+                            <span class="badge" style="background: var(--bg-color); color: var(--text-color);">Rank #<%= ranks.ticTacToe %></span>
+                        </div>
+                        <div class="stat-value fs-3 fw-bold mb-1" style="color: var(--primary-color);"><%= user.points.ticTacToe || 0 %></div>
+                        <small class="text-muted">Highest Session Score</small>
+                    </div>
+                </div>
+
+                <!-- Game 2: Rock Paper Scissors -->
+                <div class="col-md-6">
+                    <div class="game-stat-card p-3 rounded-3" style="background: var(--surface-color); border: 1px solid var(--border-color);">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="mb-0">Rock Paper Scissors</h5>
+                            <span class="badge" style="background: var(--bg-color); color: var(--text-color);">Rank #<%= ranks.rockPaperScissors %></span>
+                        </div>
+                        <div class="stat-value fs-3 fw-bold mb-1" style="color: var(--primary-color);"><%= user.points.rockPaperScissors || 0 %></div>
+                        <small class="text-muted">Highest Session Score</small>
+                    </div>
+                </div>
+
+                <!-- Game 3: Simon Game -->
+                <div class="col-md-6">
+                    <div class="game-stat-card p-3 rounded-3" style="background: var(--surface-color); border: 1px solid var(--border-color);">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="mb-0">Simon Game</h5>
+                            <span class="badge" style="background: var(--bg-color); color: var(--text-color);">Rank #<%= ranks.simonGame %></span>
+                        </div>
+                        <div class="stat-value fs-3 fw-bold mb-1" style="color: var(--primary-color);"><%= user.points.simonGame || 0 %></div>
+                        <small class="text-muted">Unique Levels Cleared</small>
+                    </div>
+                </div>
+
+                <!-- Game 4: Guessing Game -->
+                <div class="col-md-6">
+                    <div class="game-stat-card p-3 rounded-3" style="background: var(--surface-color); border: 1px solid var(--border-color);">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="mb-0">Guessing Game</h5>
+                            <span class="badge" style="background: var(--bg-color); color: var(--text-color);">Rank #<%= ranks.guessingGame %></span>
+                        </div>
+                        <div class="stat-value fs-3 fw-bold mb-1" style="color: var(--primary-color);"><%= user.points.guessingGame || 0 %></div>
+                        <small class="text-muted">Efficiency Score</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
