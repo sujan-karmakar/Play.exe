@@ -18,7 +18,7 @@ const otpSchema = new Schema({
     }
 });
 
-otpSchema.pre("save", async function(next) {
+otpSchema.pre("save", async function() {
     if (!this.isModified("otp")) return;
     this.otp = await bcrypt.hash(this.otp, 12);
 });

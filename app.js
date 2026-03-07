@@ -90,7 +90,7 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).select('username points profilePicture').lean();
         
         // Calculate total scores and format for main leaderboard
         const leaderboardData = users.map(user => {

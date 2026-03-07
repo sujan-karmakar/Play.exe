@@ -77,13 +77,19 @@ module.exports.updateProfile = async (req, res, next) => {
 
         req.session.tempUpdate = { userId: id, newEmail: email };
 
-        await sendOtpEmail(email, otp, "Play.exe - Verify your email update", `Your OTP for email update is: ${otp}. It expires in 5 minutes.`);
+        try {
+            await sendOtpEmail(email, otp, "Play.exe - Verify your email update", `Your OTP for email update is: ${otp}. It expires in 5 minutes.`);
+        } catch (err) {
+            console.error("Error sending OTP email:", err);
+            req.flash('error', 'Error sending OTP email. Please try again.');
+            return res.redirect(`/users/${id}/edit`);
+        }
 
         req.flash("success", "OTP sent to new email. Please verify.");
         return res.redirect("/verify-otp");
     }
     
-    // If email didn't change (or username did), finalize here
+
     req.flash('success', 'Profile updated successfully!');
     return res.redirect(`/users/${id}`);
 };

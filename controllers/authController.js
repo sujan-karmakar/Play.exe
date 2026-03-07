@@ -16,11 +16,23 @@ module.exports.signup = async (req, res, next) => {
         return res.redirect("/signup");
     }
 
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+        req.flash("error", "Username already in use.");
+        return res.redirect("/signup");
+    }
+
     const otp = await createOtp(email);
 
-    req.session.signupData = { username, email, password };
+    try {
+        await sendOtpEmail(email, otp, "Play.exe - Verify your email", `Your OTP for verification is: ${otp}. It expires in 5 minutes.`);
+    } catch (err) {
+        console.error("Error sending OTP email:", err);
+        req.flash("error", "Error sending OTP email. Please try again.");
+        return res.redirect("/signup");
+    }
 
-    await sendOtpEmail(email, otp, "Play.exe - Verify your email", `Your OTP for verification is: ${otp}. It expires in 5 minutes.`);
+    req.session.signupData = { username, email, password };
 
     req.flash("success", "OTP sent to your email. Please verify.");
     res.redirect("/verify-otp");
@@ -53,14 +65,18 @@ module.exports.verifyOtp = async (req, res, next) => {
 
         const newUser = new User({ email, username });
         const registeredUser = await User.register(newUser, password);
-         await Otp.deleteMany({ email }); // Delete all OTPs for this email
+        await Otp.deleteMany({ email }); // Delete all OTPs for this email
         delete req.session.signupData;
 
-        req.login(registeredUser, (err) => {
-            if (err) return next(err);
-            req.flash("success", `Welcome to Play.exe ${newUser.username}`);
-            res.redirect("/");
+        await new Promise((resolve, reject) => {
+            req.login(registeredUser, (err) => {
+                if (err) return reject(err);
+                resolve();
+            });
         });
+
+        req.flash("success", `Welcome to Play.exe ${newUser.username}`);
+        return res.redirect("/");
     } else if (req.session.tempUpdate) {
         const { userId, newEmail } = req.session.tempUpdate;
         
@@ -86,21 +102,22 @@ module.exports.verifyOtp = async (req, res, next) => {
             await Otp.deleteMany({ email: newEmail });
             delete req.session.tempUpdate;
 
-            req.login(user, (err) => {
-                if (err) {
-                    req.flash("error", "Error re-logging in");
-                    return res.redirect(`/users/${userId}`);
-                }
-                req.flash("success", "Email updated successfully!");
-                res.redirect(`/users/${userId}`);
+            await new Promise((resolve, reject) => {
+                req.login(user, (err) => {
+                    if (err) return reject(err);
+                    resolve();
+                });
             });
+
+            req.flash("success", "Email updated successfully!");
+            return res.redirect(`/users/${userId}`);
         } else {
             req.flash("error", "User not found.");
-            res.redirect("/");
+            return res.redirect("/");
         }
     } else {
         req.flash("error", "Session expired or invalid request.");
-        res.redirect("/signup");
+        return res.redirect("/signup");
     }
 };
 
