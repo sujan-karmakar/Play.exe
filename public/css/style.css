@@ -90,6 +90,16 @@ button {
     border-color: var(--primary-color);
 }
 
+.custom-navbar .navbar-search {
+    width: 50%;
+    max-width: 500px;
+}
+
+.custom-navbar .navbar-search .form-control {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .custom-navbar .form-control {
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
@@ -116,6 +126,14 @@ button {
 .custom-navbar .btn-outline-primary:hover {
     background-color: var(--primary-color);
     color: #fff;
+}
+
+@media (max-width: 991.98px) {
+    .custom-navbar .navbar-search {
+        width: 100%;
+        max-width: none;
+        margin: 1rem 0;
+    }
 }
 
 
