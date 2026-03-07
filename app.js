@@ -121,7 +121,7 @@ app.get("/", async (req, res) => {
         // Prepare top 3 for each game
         const getTop3 = (gameName) => {
             return users
-                .map(u => ({ username: u.username, score: (u.points && u.points[gameName]) || 0 }))
+                .map(u => ({ username: u.username, score: (u.points && u.points[gameName]) || 0, _id: u._id }))
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 3);
         };

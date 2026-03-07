@@ -103,6 +103,11 @@ button {
     box-shadow: none;
 }
 
+.custom-navbar .form-control::placeholder {
+    color: #8b949e;
+    opacity: 1;
+}
+
 .custom-navbar .btn-outline-primary {
     color: var(--primary-color);
     border-color: var(--primary-color);
@@ -522,5 +527,17 @@ footer {
 .auth-btn:hover {
     filter: brightness(1.1);
     transform: translateY(-1px);
+}
+
+/* Leaderboard Styles */
+.leaderboard a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.leaderboard a:hover {
+    text-decoration: underline;
+    color: var(--primary-color);
 }
 

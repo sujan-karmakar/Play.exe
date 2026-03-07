@@ -9,25 +9,26 @@ const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
 
 const userController = require("../controllers/user.js");
+const authController = require("../controllers/authController");
 
 
 router.route("/signup")
-.get(userController.renderSignupForm)
-.post(wrapAsync(userController.signup));
+.get(authController.renderSignupForm)
+.post(wrapAsync(authController.signup));
 
 router.route("/verify-otp")
-.get(userController.renderVerifyOtp)
-.post(wrapAsync(userController.verifyOtp));
+.get(authController.renderVerifyOtp)
+.post(wrapAsync(authController.verifyOtp));
 
 router.route("/login")
-.get(userController.renderLoginForm)
+.get(authController.renderLoginForm)
 .post(
     savedRedirectUrl,
     passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
-    wrapAsync(userController.login),
+    wrapAsync(authController.login),
 );
 
-router.get("/logout", userController.logout);
+router.get("/logout", authController.logout);
 
 // User Search Route
 router.get('/users/search', wrapAsync(userController.searchUser));

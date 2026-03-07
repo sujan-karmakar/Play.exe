@@ -11,12 +11,12 @@
                     <p>The classic hand game. Test your luck against the computer! (Leaderboard: Highest Session Score)</p>
                     <a href="/games/rockpaperscissors" class="play-btn">Play Now</a>
                     
-                    <div class="mini-leaderboard">
+                    <div class="mini-leaderboard leaderboard">
                         <h4>Top Players</h4>
                         <ul>
                             <% if(gameLeaderboards && gameLeaderboards.rockPaperScissors) { %>
                                 <% gameLeaderboards.rockPaperScissors.forEach((player, idx) => { %>
-                                    <li><span>#<%= idx + 1 %> <%= player.username %></span> <span><%= player.score %></span></li>
+                                    <li><span>#<%= idx + 1 %> <a href="/users/<%= player._id %>"><%= player.username %></a></span> <span><%= player.score %></span></li>
                                 <% }) %>
                             <% } %>
                         </ul>
@@ -31,12 +31,12 @@
                     <p>Test your memory! Repeat the sequence of lights and sounds. (Leaderboard: Your all-time highest level)</p>
                     <a href="/games/simongame" class="play-btn">Play Now</a>
 
-                    <div class="mini-leaderboard">
+                    <div class="mini-leaderboard leaderboard">
                         <h4>Top Players</h4>
                         <ul>
                             <% if(gameLeaderboards && gameLeaderboards.simonGame) { %>
                                 <% gameLeaderboards.simonGame.forEach((player, idx) => { %>
-                                    <li><span>#<%= idx + 1 %> <%= player.username %></span> <span><%= player.score %></span></li>
+                                    <li><span>#<%= idx + 1 %> <a href="/users/<%= player._id %>"><%= player.username %></a></span> <span><%= player.score %></span></li>
                                 <% }) %>
                             <% } %>
                         </ul>
@@ -51,12 +51,12 @@
                     <p>Can you guess the number? Challenge your intuition. (Leaderboard: Your best efficiency score)</p>
                     <a href="/games/guessinggame" class="play-btn">Play Now</a>
 
-                    <div class="mini-leaderboard">
+                    <div class="mini-leaderboard leaderboard">
                         <h4>Top Players</h4>
                         <ul>
                             <% if(gameLeaderboards && gameLeaderboards.guessingGame) { %>
                                 <% gameLeaderboards.guessingGame.forEach((player, idx) => { %>
-                                    <li><span>#<%= idx + 1 %> <%= player.username %></span> <span><%= player.score %></span></li>
+                                    <li><span>#<%= idx + 1 %> <a href="/users/<%= player._id %>"><%= player.username %></a></span> <span><%= player.score %></span></li>
                                 <% }) %>
                             <% } %>
                         </ul>
@@ -71,12 +71,12 @@
                     <p>Classic strategy game. X's and O's, three in a row wins! (Leaderboard: Highest Session Score)</p>
                     <a href="/games/tictactoe" class="play-btn">Play Now</a>
 
-                    <div class="mini-leaderboard">
+                    <div class="mini-leaderboard leaderboard">
                         <h4>Top Players</h4>
                         <ul>
                             <% if(gameLeaderboards && gameLeaderboards.ticTacToe) { %>
                                 <% gameLeaderboards.ticTacToe.forEach((player, idx) => { %>
-                                    <li><span>#<%= idx + 1 %> <%= player.username %></span> <span><%= player.score %></span></li>
+                                    <li><span>#<%= idx + 1 %> <a href="/users/<%= player._id %>"><%= player.username %></a></span> <span><%= player.score %></span></li>
                                 <% }) %>
                             <% } %>
                         </ul>
@@ -94,13 +94,13 @@
                     <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Log in</a> to save scores & join the leaderboard!
                 </p>
             <% } %>
-            <div class="leaderboard-list">
+            <div class="leaderboard-list leaderboard">
                 <% if(leaderboardData && leaderboardData.length > 0) { %>
                     <ul class="leaderboard-items">
                         <% leaderboardData.forEach((player, index) => { %>
                             <li class="leaderboard-item <%= (currentUser && player._id.toString() === currentUser._id.toString()) ? 'highlight-user' : '' %>">
                                 <span class="rank">#<%= index + 1 %></span>
-                                <a href="/users/<%= player._id %>" class="username" style="text-decoration: none; color: inherit;"><%= player.username %></a>
+                                <a href="/users/<%= player._id %>" class="username"><%= player.username %></a>
                                 <span class="score"><%= player.totalScore %></span>
                             </li>
                         <% }) %>
