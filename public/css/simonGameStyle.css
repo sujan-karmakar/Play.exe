@@ -12,6 +12,34 @@ h3, h4 {
     text-align: center;
 }
 
+.simon-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.75rem;
+}
+
+.simon-start-btn {
+    background: linear-gradient(135deg, var(--primary-color), #2ea8ff);
+    border: none;
+    border-radius: 999px;
+    color: #081018;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.8rem 1.6rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 12px 30px rgba(88, 166, 255, 0.25);
+}
+
+.simon-start-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.simon-start-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    box-shadow: none;
+}
+
 #container {
     width: min(400px, calc(100vw - 2rem));
     aspect-ratio: 1 / 1;
@@ -79,6 +107,11 @@ h3, h4 {
     h3, h4 {
         padding: 0 0.75rem;
         font-size: 1rem;
+    }
+
+    .simon-start-btn {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.3rem;
     }
 
     #container {

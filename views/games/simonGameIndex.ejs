@@ -7,7 +7,11 @@
         <h3>Highest Score: <span id="simon-score"><%= (currentUser.points && currentUser.points.simonGame) || 0 %></span></h3>
     <% } %>
 
-        <h3 id="level-title">Press any key(Desktop) or tap outside the board(Mobile) to start the game</h3>
+        <h3 id="level-title">Press Start to begin the game</h3>
+
+        <div class="simon-controls">
+            <button id="start-game-btn" class="simon-start-btn" type="button">Start Game</button>
+        </div>
 
         <div id="container" class="glass">
             <div id="line1">
