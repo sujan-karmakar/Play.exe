@@ -48,6 +48,13 @@ module.exports.updateProfile = async (req, res, next) => {
     if (username && username !== req.user.username) {
         req.user.username = username;
         await req.user.save();
+
+        await new Promise((resolve, reject) => {
+            req.login(req.user, (err) => {
+                if (err) return reject(err);
+                resolve();
+            });
+        });
     }
 
     // Handle profile picture upload
