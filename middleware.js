@@ -17,7 +17,7 @@ module.exports.isAccountOwner = async (req, res, next) => {
     const { id } = req.params;
     if (!req.user || !req.user._id.equals(id)) {
         req.flash('error', 'You do not have permission to do that!');
-        return res.redirect(/users/);
+        return res.redirect(`/users/${id}`);
     }
     next();
 };

@@ -15,6 +15,10 @@ router.route("/signup")
 .get(userController.renderSignupForm)
 .post(wrapAsync(userController.signup));
 
+router.route("/verify-otp")
+.get(userController.renderVerifyOtp)
+.post(wrapAsync(userController.verifyOtp));
+
 router.route("/login")
 .get(userController.renderLoginForm)
 .post(
