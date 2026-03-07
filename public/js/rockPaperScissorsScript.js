@@ -79,17 +79,12 @@ const showResult = (result, userChoice, compChoice) => {
         scoreChangeDisplay.classList.add("win");
         resultMsg.textContent = `${capitalize(userChoice)} beats ${capitalize(compChoice)}`;
     } else if (result === "loss") {
-        // Option: Do we decrease score in session max mode? 
-        // Typically max score runs don't decrease on loss but restart or just stop increasing.
-        // User said "Take his score in that session... compare with highest".
-        // If I lose, my session score usually drops or I lose the streak.
-        // Let's assume standard points: Win=+1, Loss=-1 (min 0) or just Win counting?
-        // Let's stick to +1/-1 but min 0 for session.
-        if(score > 0) score--;
+        // Reset score on loss
         resultTitle.textContent = "YOU LOSE!";
-        scoreChangeDisplay.textContent = "-1";
+        scoreChangeDisplay.textContent = "Reset";
         scoreChangeDisplay.classList.add("loss");
-        resultMsg.textContent = `${capitalize(compChoice)} beats ${capitalize(userChoice)}`;
+        resultMsg.textContent = `${capitalize(compChoice)} beats ${capitalize(userChoice)}. Final Streak: ${score}`;
+        score = 0;
     } else {
         // Score doesn't change on draw
         resultTitle.textContent = "IT'S A DRAW!";

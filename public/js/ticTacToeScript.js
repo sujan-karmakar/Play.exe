@@ -85,7 +85,9 @@ const endGame = (result) => {
         msg.innerText = `You Won!`;
     } else if (result === "O") {
         // Computer Wins
-        msg.innerText = "Game Over!";
+        msg.innerText = `Game Over! Final Score: ${sessionScore}`;
+        sessionScore = 0;
+        userScoreEl.innerText = sessionScore;
     } else {
         // Draw
         msg.innerText = "It's a Draw!";
