@@ -1,5 +1,8 @@
 const User = require("../models/user.js");
 const { getProfileData } = require("../utils/profileService");
+const multer = require("multer");
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 module.exports.searchUser = async (req, res) => {
     const { query } = req.query;
@@ -44,6 +47,12 @@ module.exports.updateProfile = async (req, res, next) => {
 
     if (username && username !== req.user.username) {
         req.user.username = username;
+        await req.user.save();
+    }
+
+    // Handle profile picture upload
+    if (req.file) {
+        req.user.profilePicture = req.file.path;
         await req.user.save();
     }
 

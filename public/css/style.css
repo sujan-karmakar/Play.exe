@@ -511,6 +511,32 @@ footer {
     box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
 }
 
+.auth-form .form-control[type="file"] {
+    padding: 0.5rem 1rem;
+}
+
+.auth-form .form-control[type="file"]::-webkit-file-upload-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background-color 0.3s;
+}
+
+.auth-form .form-control[type="file"]::-webkit-file-upload-button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.auth-form .form-text {
+    color: #8b949e;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
 .auth-btn {
     width: 100%;
     margin-top: 1.5rem;

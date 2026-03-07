@@ -38,7 +38,7 @@ router.get('/users/:id', wrapAsync(userController.renderProfile));
 
 router.get('/users/:id/edit', isAccountOwner, wrapAsync(userController.renderEditForm));
 
-router.put('/users/:id', isAccountOwner, wrapAsync(userController.updateProfile));
+router.put('/users/:id', upload.single('profilePicture'), isAccountOwner, wrapAsync(userController.updateProfile));
 
 router.delete('/users/:id', isAccountOwner, wrapAsync(userController.deleteAccount));
 
