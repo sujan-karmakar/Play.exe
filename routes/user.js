@@ -16,10 +16,6 @@ router.route("/signup")
 .get(authController.renderSignupForm)
 .post(wrapAsync(authController.signup));
 
-router.route("/verify-otp")
-.get(authController.renderVerifyOtp)
-.post(wrapAsync(authController.verifyOtp));
-
 router.route("/login")
 .get(authController.renderLoginForm)
 .post(

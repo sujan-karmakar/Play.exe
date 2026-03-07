@@ -9,7 +9,7 @@ A full-stack web development project featuring a web-based gaming platform where
 ## 🚀 Features
 
 - **Multiple Games**: Play Rock Paper Scissors, Simon Game, Guessing Game, and Tic Tac Toe
-- **User Authentication**: Secure signup/login with email verification via OTP
+- **User Authentication**: Secure signup/login with Passport-based authentication
 - **Profile Management**: Update username, email, and profile pictures
 - **Leaderboards**: Global and game-specific leaderboards with rankings
 - **Responsive Design**: Dark-themed UI that works on all devices
@@ -24,8 +24,6 @@ A full-stack web development project featuring a web-based gaming platform where
 - **MongoDB** - NoSQL database
 - **Mongoose** - MongoDB object modeling
 - **Passport.js** - Authentication middleware
-- **bcrypt** - Password hashing
-- **Nodemailer** - Email sending
 - **Multer** - File upload handling
 - **Cloudinary** - Cloud storage for images
 
@@ -50,14 +48,11 @@ Play.exe/
 │   ├── games.js         # Game routes
 │   └── user.js          # User profile management
 ├── models/              # Database models
-│   ├── otp.js          # OTP model
 │   └── user.js         # User model
 ├── routes/              # Express routes
 │   ├── games.js        # Game routes
 │   └── user.js         # User routes
 ├── utils/               # Utility functions
-│   ├── emailService.js # Email utilities
-│   ├── otpService.js   # OTP generation/verification
 │   ├── profileService.js# Profile data calculations
 │   ├── ExpressError.js # Error handling
 │   └── wrapAsync.js    # Async error wrapper
@@ -103,8 +98,6 @@ Play.exe/
    CLOUD_NAME=your_cloudinary_cloud_name
    CLOUD_API_KEY=your_cloudinary_api_key
    CLOUD_API_SECRET=your_cloudinary_api_secret
-   EMAIL_USER=your_email@gmail.com
-   EMAIL_PASS=your_email_app_password
    ```
 
 4. **Start the development server**
@@ -119,7 +112,7 @@ Play.exe/
 
 ## 🎯 Usage
 
-1. **Sign Up**: Create an account with email verification
+1. **Sign Up**: Create an account and start playing immediately
 2. **Play Games**: Choose from multiple browser-based games
 3. **Track Scores**: View your performance on leaderboards
 4. **Customize Profile**: Update your information and upload a profile picture

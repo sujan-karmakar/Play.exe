@@ -44,11 +44,42 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateProfile = async (req, res, next) => {
     const { id } = req.params;
     const { username, email } = req.body;
+    const usernameChanged = username && username !== req.user.username;
+    const emailChanged = email && email !== req.user.email;
 
-    if (username && username !== req.user.username) {
+    if (usernameChanged) {
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername && !existingUsername._id.equals(req.user._id)) {
+            req.flash('error', 'Username already in use.');
+            return res.redirect(`/users/${id}/edit`);
+        }
+    }
+
+    if (emailChanged) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser && !existingUser._id.equals(req.user._id)) {
+            req.flash('error', 'Email already in use.');
+            return res.redirect(`/users/${id}/edit`);
+        }
+    }
+
+    if (usernameChanged) {
         req.user.username = username;
-        await req.user.save();
+    }
 
+    if (emailChanged) {
+        req.user.email = email;
+    }
+
+    if (req.file) {
+        req.user.profilePicture = req.file.path;
+    }
+
+    if (usernameChanged || emailChanged || req.file) {
+        await req.user.save();
+    }
+
+    if (usernameChanged) {
         await new Promise((resolve, reject) => {
             req.login(req.user, (err) => {
                 if (err) return reject(err);
@@ -56,39 +87,6 @@ module.exports.updateProfile = async (req, res, next) => {
             });
         });
     }
-
-    // Handle profile picture upload
-    if (req.file) {
-        req.user.profilePicture = req.file.path;
-        await req.user.save();
-    }
-
-    if (email && email !== req.user.email) {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            req.flash('error', 'Email already in use.');
-            return res.redirect(`/users/${id}/edit`);
-        }
-
-        const { createOtp } = require("../utils/otpService");
-        const { sendOtpEmail } = require("../utils/emailService");
-
-        const otp = await createOtp(email);
-
-        req.session.tempUpdate = { userId: id, newEmail: email };
-
-        try {
-            await sendOtpEmail(email, otp, "Play.exe - Verify your email update", `Your OTP for email update is: ${otp}. It expires in 5 minutes.`);
-        } catch (err) {
-            console.error("Error sending OTP email:", err);
-            req.flash('error', 'Error sending OTP email. Please try again.');
-            return res.redirect(`/users/${id}/edit`);
-        }
-
-        req.flash("success", "OTP sent to new email. Please verify.");
-        return res.redirect("/verify-otp");
-    }
-    
 
     req.flash('success', 'Profile updated successfully!');
     return res.redirect(`/users/${id}`);
