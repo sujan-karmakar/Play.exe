@@ -41,9 +41,9 @@ app.use(express.static("public"));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(express.static(path.join(__dirname, 'public/css')));
 app.use(express.static(path.join(__dirname, 'public/js')));
-app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 
 const store = MongoStore.create({

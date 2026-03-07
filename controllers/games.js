@@ -19,8 +19,7 @@ module.exports.updateScore = async (req, res) => {
         return res.status(400).json({ error: "Invalid game name" });
     }
 
-    try {
-        const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id);
 
         const now = new Date();
         const lastUpdate = user.updatedAt ? new Date(user.updatedAt) : new Date(0);
@@ -48,8 +47,6 @@ module.exports.updateScore = async (req, res) => {
         if (typeof user.points[game] === 'undefined') {
             user.points[game] = 0;
         }
-
-        
         
         if (parseInt(score) > user.points[game]) {
             user.points[game] = parseInt(score);
@@ -62,10 +59,6 @@ module.exports.updateScore = async (req, res) => {
             message: "Score updated successfully", 
             totalScore: user.points[game] 
         });
-    } catch (err) {
-        console.error("Score update error:", err);
-        res.status(500).json({ error: "Failed to update score" });
-    }
 };
 
 module.exports.ticTacToe = (req, res) => {

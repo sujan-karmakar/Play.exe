@@ -1,16 +1,7 @@
 const User = require("../models/user.js");
 const Otp = require("../models/otp.js");
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
-
-// Configure Nodemailer
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+const { sendOtpEmail } = require("../utils/emailService");
+const { createOtp, verifyOtp } = require("../utils/otpService");
 
 module.exports.renderSignupForm = (req, res) => {
     res.render("users/signup.ejs");
@@ -25,27 +16,14 @@ module.exports.signup = async (req, res, next) => {
         return res.redirect("/signup");
     }
 
-    try {
-        const otp = crypto.randomInt(0, 1000000).toString().padStart(6, "0");
-        await Otp.create({ email, otp });
+    const otp = await createOtp(email);
 
-        req.session.signupData = { username, email, password };
+    req.session.signupData = { username, email, password };
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "Play.exe - Verify your email",
-            text: `Your OTP for verification is: ${otp}. It expires in 5 minutes.`,
-        };
+    await sendOtpEmail(email, otp, "Play.exe - Verify your email", `Your OTP for verification is: ${otp}. It expires in 5 minutes.`);
 
-        await transporter.sendMail(mailOptions);
-        req.flash("success", "OTP sent to your email. Please verify.");
-        res.redirect("/verify-otp");
-    } catch (err) {
-        console.error("Error sending OTP:", err);
-        req.flash("error", "Failed to send OTP. Please try again.");
-        res.redirect("/signup");
-    }
+    req.flash("success", "OTP sent to your email. Please verify.");
+    res.redirect("/verify-otp");
 };
 
 module.exports.renderVerifyOtp = (req, res) => {
@@ -73,21 +51,16 @@ module.exports.verifyOtp = async (req, res, next) => {
             return res.redirect("/verify-otp");
         }
 
-        try {
-            const newUser = new User({ email, username });
-            const registeredUser = await User.register(newUser, password);
-             await Otp.deleteMany({ email }); // Delete all OTPs for this email
-            delete req.session.signupData;
+        const newUser = new User({ email, username });
+        const registeredUser = await User.register(newUser, password);
+         await Otp.deleteMany({ email }); // Delete all OTPs for this email
+        delete req.session.signupData;
 
-            req.login(registeredUser, (err) => {
-                if (err) return next(err);
-                req.flash("success", `Welcome to Play.exe ${newUser.username}`);
-                res.redirect("/");
-            });
-        } catch (e) {
-            req.flash("error", e.message);
-            res.redirect("/signup");
-        }
+        req.login(registeredUser, (err) => {
+            if (err) return next(err);
+            req.flash("success", `Welcome to Play.exe ${newUser.username}`);
+            res.redirect("/");
+        });
     } else if (req.session.tempUpdate) {
         const { userId, newEmail } = req.session.tempUpdate;
         
@@ -106,30 +79,24 @@ module.exports.verifyOtp = async (req, res, next) => {
             return res.redirect("/verify-otp");
         }
 
-        try {
-            const user = await User.findById(userId);
-            if (user) {
-                user.email = newEmail;
-                await user.save();
-                await Otp.deleteMany({ email: newEmail });
-                delete req.session.tempUpdate;
+        const user = await User.findById(userId);
+        if (user) {
+            user.email = newEmail;
+            await user.save();
+            await Otp.deleteMany({ email: newEmail });
+            delete req.session.tempUpdate;
 
-                req.login(user, (err) => {
-                    if (err) {
-                        req.flash("error", "Error re-logging in");
-                        return res.redirect(`/users/${userId}`);
-                    }
-                    req.flash("success", "Email updated successfully!");
-                    res.redirect(`/users/${userId}`);
-                });
-            } else {
-                req.flash("error", "User not found.");
-                res.redirect("/");
-            }
-        } catch (e) {
-            console.error(e);
-            req.flash("error", "Error updating email.");
-            res.redirect(`/users/${userId}/edit`);
+            req.login(user, (err) => {
+                if (err) {
+                    req.flash("error", "Error re-logging in");
+                    return res.redirect(`/users/${userId}`);
+                }
+                req.flash("success", "Email updated successfully!");
+                res.redirect(`/users/${userId}`);
+            });
+        } else {
+            req.flash("error", "User not found.");
+            res.redirect("/");
         }
     } else {
         req.flash("error", "Session expired or invalid request.");
@@ -224,79 +191,31 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateProfile = async (req, res, next) => {
     const { id } = req.params;
-    const { username, email, password } = req.body;
-    
-    // We cannot proceed without password
-    if (!password) {
-        req.flash('error', 'Password is required to update profile.');
-        return res.redirect(`/users/${id}/edit`);
+    const { username, email } = req.body;
+
+    if (username && username !== req.user.username) {
+        req.user.username = username;
+        await req.user.save();
     }
 
-    try {
-        const user = await User.findById(id);
-        
-        // Use promisified authentication if possible, or wrap it
-        // Since passport-local-mongoose authenticate does not support Promise directly in a convenient way for result, we wrap it manually or use callback carefully.
-        // Let's use clean callback structure, ensuring all paths return.
-        
-        user.authenticate(password, async (err, result, passwordErr) => {
-            if (err || passwordErr || !result) {
-                req.flash('error', 'Incorrect Password. Changes not saved.');
-                return res.redirect(`/users/${id}/edit`);
-            }
+    if (email && email !== req.user.email) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            req.flash('error', 'Email already in use.');
+            return res.redirect(`/users/${id}/edit`);
+        }
 
-            try {
-                if (username && username !== user.username) {
-                    user.username = username;
-                    await user.save();
-                }
+        const otp = await createOtp(email);
 
-                if (email && email !== user.email) {
-                    const existingUser = await User.findOne({ email });
-                    if (existingUser) {
-                        req.flash('error', 'Email already in use.');
-                        return res.redirect(`/users/${id}/edit`);
-                    }
+        req.session.tempUpdate = { userId: id, newEmail: email };
 
-                    const otp = crypto.randomInt(0, 1000000).toString().padStart(6, "0");
-                    await Otp.create({ email, otp });
+        await sendOtpEmail(email, otp, "Play.exe - Verify your email update", `Your OTP for email update is: ${otp}. It expires in 5 minutes.`);
 
-                    req.session.tempUpdate = { userId: id, newEmail: email };
-
-                    const mailOptions = {
-                        from: process.env.EMAIL_USER,
-                        to: email,
-                        subject: "Play.exe - Verify your email update",
-                        text: `Your OTP for email update is: ${otp}. It expires in 5 minutes.`,
-                    };
-                    
-                    await transporter.sendMail(mailOptions);
-                    req.flash("success", "OTP sent to new email. Please verify.");
-                    return res.redirect("/verify-otp");
-                }
-                
-                // If email didn't change (or username did), finalize here
-                req.login(user, (loginErr) => {
-                    if (loginErr) {
-                        console.error("Login error during update:", loginErr);
-                        req.flash('error', 'Error re-logging in');
-                        return res.redirect(`/users/${id}`); 
-                    }
-                    req.flash('success', 'Profile updated successfully!');
-                    return res.redirect(`/users/${id}`);
-                });
-
-            } catch (innerError) {
-                console.error("Update profile error:", innerError);
-                req.flash("error", "An error occurred while updating profile.");
-                return res.redirect(`/users/${id}/edit`);
-            }
-        });
-    } catch (outerError) {
-        console.error("User lookup error:", outerError);
-        req.flash("error", "User not found.");
-        return res.redirect("/");
+        req.flash("success", "OTP sent to new email. Please verify.");
+        return res.redirect("/verify-otp");
     }
+    req.flash('success', 'Profile updated successfully!');
+    return res.redirect(`/users/${id}`);
 };
 
 module.exports.deleteAccount = async (req, res) => {
