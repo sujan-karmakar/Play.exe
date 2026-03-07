@@ -7,15 +7,25 @@ let started = false;
 let level = 0;
 
 let h3 = document.querySelector("#level-title");
+let gameBoard = document.querySelector("#container");
+
+function startGame() {
+    if (started) return;
+
+    started = true;
+    levelUp();
+}
 
 document.addEventListener("keypress", function () {
-    if (started == false) {
-        console.log("game is started");
-        started = true;
-
-        levelUp();
-    }
+    startGame();
 });
+
+document.addEventListener("touchstart", function (event) {
+    if (started) return;
+    if (gameBoard && gameBoard.contains(event.target)) return;
+
+    startGame();
+}, { passive: true });
 
 function gameFlash(btn) {
     btn.classList.add("flash");
@@ -39,7 +49,6 @@ function levelUp() {
     let randIdx = Math.floor(Math.random() * 4);
     let randColor = btns[randIdx];
     gameSeq.push(randColor);
-    console.log(gameSeq);
 
     // Flash the new sequence button
     let i = 0;
@@ -80,7 +89,7 @@ function checkAns(idx) {
         let score = level - 1;
         if(score > 0) updateScoreInDB(score); // Send score update
 
-        h3.innerHTML = `Game Over! Your score was <b>${score}</b> <br> Press any key to start.`;
+        h3.innerHTML = `Game Over! Your score was <b>${score}</b> <br> Press any key or tap outside the board to start.`;
         document.querySelector("body").style.backgroundColor = "red";
         setTimeout(function () {
             document.querySelector("body").style.backgroundColor = ""; // Reset to CSS default
@@ -94,7 +103,7 @@ function btnPress() {
     let btn = this;
     userFlash(btn);
 
-    userColor = btn.getAttribute("id");
+    let userColor = btn.getAttribute("id");
     userSeq.push(userColor);
 
     checkAns(userSeq.length - 1);
