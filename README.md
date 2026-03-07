@@ -2,6 +2,10 @@
 
 A full-stack web development project featuring a web-based gaming platform where users can play multiple browser games in one place. The project focuses on providing a simple, fast, and interactive experience for casual gaming directly in the browser.
 
+## 🌐 Deployment
+
+[Play.exe](https://play-exe.onrender.com/)
+
 ## 🚀 Features
 
 - **Multiple Games**: Play Rock Paper Scissors, Simon Game, Guessing Game, and Tic Tac Toe
