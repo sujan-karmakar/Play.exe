@@ -100,6 +100,15 @@
                         <% leaderboardData.forEach((player, index) => { %>
                             <li class="leaderboard-item <%= (currentUser && player._id.toString() === currentUser._id.toString()) ? 'highlight-user' : '' %>">
                                 <span class="rank">#<%= index + 1 %></span>
+                                
+                                <% if(player.profilePicture) { %>
+                                    <img src="<%= player.profilePicture %>" alt="<%= player.username %>" class="leaderboard-avatar">
+                                <% } else { %>
+                                    <div class="leaderboard-avatar placeholder">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                <% } %>
+
                                 <a href="/users/<%= player._id %>" class="username"><%= player.username %></a>
                                 <span class="score"><%= player.totalScore %></span>
                             </li>
@@ -114,9 +123,18 @@
                 <div class="user-rank-footer">
                     <h4>Your Position</h4>
                     <div class="user-rank-info">
-                        <span class="rank">#<%= userRank.rank %></span>
-                        <span class="username"><%= userRank.username %></span>
-                        <span class="score"><%= userRank.totalScore %></span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="rank" style="color: white;">#<%= userRank.rank %></span>
+                            <% if(userRank.profilePicture) { %>
+                                <img src="<%= userRank.profilePicture %>" class="leaderboard-avatar" style="width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.5);">
+                            <% } else { %>
+                                <div class="leaderboard-avatar placeholder" style="width: 30px; height: 30px; background: rgba(255,255,255,0.2); color: white;">
+                                    <i class="fa-solid fa-user" style="font-size: 0.8rem;"></i>
+                                </div>
+                            <% } %>
+                            <span class="username" style="color: white;"><%= userRank.username %></span>
+                        </div>
+                        <span class="score" style="background: rgba(0,0,0,0.2); color: white;"><%= userRank.totalScore %></span>
                     </div>
                 </div>
             <% } %>

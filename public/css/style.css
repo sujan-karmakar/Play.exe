@@ -364,12 +364,29 @@ footer {
 
 .leaderboard-item {
     display: grid;
-    grid-template-columns: 30px 1fr auto;
+    grid-template-columns: 30px 40px 1fr auto;
+    gap: 8px;
     align-items: center;
     padding: 0.6rem 0.8rem;
     border-radius: 6px;
     margin-bottom: 2px;
     transition: background 0.2s;
+}
+
+.leaderboard-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+div.leaderboard-avatar.placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    font-size: 0.85rem;
 }
 
 .leaderboard-item:hover {

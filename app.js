@@ -99,7 +99,8 @@ app.get("/", async (req, res) => {
             return {
                 username: user.username,
                 totalScore: totalScore,
-                _id: user._id
+                _id: user._id,
+                profilePicture: user.profilePicture
             };
         });
 
