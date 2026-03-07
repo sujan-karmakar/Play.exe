@@ -4,14 +4,35 @@ const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
 
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 module.exports.searchUser = async (req, res) => {
-    const { query } = req.query;
-    if (!query) {
+    const searchTerm = (req.query.username || req.query.query || "").trim();
+
+    if (!searchTerm) {
+        if (req.query.username !== undefined) {
+            req.flash('error', 'Enter a username to search.');
+            return res.redirect('/');
+        }
+
         return res.json([]);
     }
 
+    if (req.query.username !== undefined) {
+        const matchedUser = await User.findOne({
+            username: { $regex: new RegExp(`^${escapeRegex(searchTerm)}$`, 'i') }
+        }).select('_id');
+
+        if (!matchedUser) {
+            req.flash('error', 'User not found!');
+            return res.redirect('/');
+        }
+
+        return res.redirect(`/users/${matchedUser._id}`);
+    }
+
     const users = await User.find({
-        username: { $regex: query, $options: 'i' }
+        username: { $regex: new RegExp(escapeRegex(searchTerm), 'i') }
     }).limit(10).select('username _id');
 
     res.json(users);
