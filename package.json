@@ -1,5 +1,5 @@
 {
-  "engiens": {
+  "engines": {
     "node": "22.26.0"
   },
   "name": "play.exe",
