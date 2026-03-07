@@ -1,4 +1,7 @@
 {
+  "engiens": {
+    "node": "22.26.0"
+  },
   "name": "play.exe",
   "version": "1.0.0",
   "description": "A gaming website",
